@@ -177,8 +177,8 @@ msgstr "Tipus d'eina"
 msgid "Smart fill angle"
 msgstr "Angle de farciment intel·ligent"
 
-msgid "On highlighted overhangs only"
-msgstr "Només als voladissos ressaltats"
+msgid "On overhangs only"
+msgstr "Només als voladissos"
 
 msgid "Auto support threshold angle: "
 msgstr "Angle llindar de suport automàtic: "
