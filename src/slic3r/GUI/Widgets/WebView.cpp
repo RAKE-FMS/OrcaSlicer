@@ -173,12 +173,6 @@ private:
 
 class WebViewWebKit : public wxWebViewWebKit
 {
-public:
-    WebViewWebKit()
-        : wxWebViewWebKit(wxWebView::NewConfiguration(wxWebViewBackendWebKit))
-    {
-    }
-
     ~WebViewWebKit() override
     {
         RemoveScriptMessageHandler("wx");
@@ -264,7 +258,7 @@ wxWebView* WebView::CreateWebView(wxWindow * parent, wxString const & url)
 #ifdef __WIN32__
     wxWebView* webView = new WebViewEdge;
 #elif defined(__WXOSX__)
-    wxWebView* webView = new WebViewWebKit;
+    wxWebView *webView = new WebViewWebKit;
 #else
     auto webView = wxWebView::New();
 #endif
@@ -337,7 +331,7 @@ wxWebView* WebView::CreateWebView(wxWindow * parent, wxString const & url)
 bool WebView::CheckWebViewRuntime()
 {
     wxWebViewFactoryEdge factory;
-    auto wxVersion = factory.GetVersionInfo(wxVersionContext::RunTime);
+    auto wxVersion = factory.GetVersionInfo();
     return wxVersion.GetMajor() != 0;
 }
 

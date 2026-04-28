@@ -22,10 +22,6 @@
 
 #include "imgui/imconfig.h"
 
-#if defined(__WXGTK__)
-#include "LinuxDisplayBackend.hpp"
-#endif
-
 using boost::optional;
 
 namespace Slic3r {
@@ -36,17 +32,6 @@ wxDEFINE_EVENT(wxCUSTOMEVT_JUMP_TO_OBJECT, wxCommandEvent);
 
 using GUI::from_u8;
 using GUI::into_u8;
-
-namespace {
-
-bool focus_left_popup(wxWindow* popup, wxWindow* focus_window, wxWindow* related_window_1 = nullptr,
-    wxWindow* related_window_2 = nullptr, wxWindow* related_window_3 = nullptr)
-{
-    return focus_window != popup && !popup->IsDescendant(focus_window) && focus_window != related_window_1 &&
-        focus_window != related_window_2 && focus_window != related_window_3;
-}
-
-} // namespace
 
 namespace Search {
 
@@ -199,7 +184,7 @@ bool OptionsSearcher::search(const std::string &search, bool force /* = false*/,
     found.clear();
 
     bool         full_list = search.empty();
-    wxString sep       = L" : ";
+    std::wstring sep       = L" : ";
 
     auto get_label = [this, &sep](const Option &opt, bool marked = true) {
         std::wstring out;
@@ -228,7 +213,7 @@ bool OptionsSearcher::search(const std::string &search, bool force /* = false*/,
     };
 
     auto get_tooltip = [this, &sep](const Option &opt) {
-        return wxString(marker_by_type(opt.type, printer_technology)) + opt.category_local + sep + opt.group_local + sep + opt.label_local;
+        return marker_by_type(opt.type, printer_technology) + opt.category_local + sep + opt.group_local + sep + opt.label_local;
     };
 
     std::vector<uint16_t> matches, matches2;
@@ -689,24 +674,11 @@ void SearchDialog::OnDismiss() { }
 
 void SearchDialog::Dismiss()
 {
-    auto focus_window = wxWindow::FindFocus();
-    if (!focus_window) {
-        Die();
-        return;
-    }
-#if defined(__WXGTK__)
-    // On Wayland, wxGetMousePosition() returns unreliable global coords.
-    // Rely on focus tracking instead: if focus moved to a window outside
-    // this dialog and its related controls, dismiss.
-    if (Slic3r::GUI::is_running_on_wayland()) {
-        if (focus_left_popup(this, focus_window, m_event_tag, m_search_item_tag, search_line)) {
-            Die();
-        }
-        return;
-    }
-#endif
     auto pos = wxGetMousePosition();
-    if (!m_event_tag->GetScreenRect().Contains(pos) && !this->GetScreenRect().Contains(pos) && !m_search_item_tag->GetScreenRect().Contains(pos)) {
+    auto focus_window = wxWindow::FindFocus();
+    if (!focus_window)
+        Die();
+    else if (!m_event_tag->GetScreenRect().Contains(pos) && !this->GetScreenRect().Contains(pos) && !m_search_item_tag->GetScreenRect().Contains(pos)) {
         Die();
     }
 }
@@ -932,24 +904,11 @@ void SearchObjectDialog::OnDismiss() {}
 
 void SearchObjectDialog::Dismiss()
 {
-    auto focus_window = wxWindow::FindFocus();
-    if (!focus_window) {
-        Die();
-        return;
-    }
-#if defined(__WXGTK__)
-    // On Wayland, wxGetMousePosition() returns unreliable global coords.
-    // Rely on focus tracking instead: if focus moved to a window outside
-    // this dialog and its related controls, dismiss.
-    if (Slic3r::GUI::is_running_on_wayland()) {
-        if (focus_left_popup(this, focus_window, search_line)) {
-            Die();
-        }
-        return;
-    }
-#endif
     auto pos = wxGetMousePosition();
-    if (!search_line->GetScreenRect().Contains(pos) && !this->GetScreenRect().Contains(pos)) {
+    auto focus_window = wxWindow::FindFocus();
+    if (!focus_window)
+        Die();
+    else if (!search_line->GetScreenRect().Contains(pos) && !this->GetScreenRect().Contains(pos)) {
         Die();
     }
 }

@@ -9,8 +9,11 @@ if (EMSCRIPTEN OR SLIC3R_OPENGL_ES)
         glad/src/gles2.c
     )
 else ()
-    # Use shared GLAD library for GL; no local sources needed
-    set(GLAD_SOURCES "")
+    set(GLAD_SOURCES
+        glad/include/glad/gl.h
+        glad/include/KHR/khrplatform.h
+        glad/src/gl.c
+    )
 endif ()
 
 set(LIBVGCODE_SOURCES
@@ -74,8 +77,4 @@ if (WIN32)
 endif ()
 
 # glad includes
-if (EMSCRIPTEN OR SLIC3R_OPENGL_ES)
-    target_include_directories(libvgcode PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/glad/include)
-else ()
-    target_link_libraries(libvgcode PUBLIC glad)
-endif ()
+include_directories(glad/include)

@@ -199,20 +199,9 @@ struct SupportElementState : public SupportElementStateBits
     AreaIncreaseSettings last_area_increase;
 
     /*!
-     * \brief Number of pending roof/contact recovery slices from this node downward, including this node.
+     * \brief Amount of roof layers that were not yet added, because the branch needed to move.
      */
-    uint32_t    missing_roof_layers = 0;
-
-    /*!
-     * \brief Contact/interface depth that this node should recover when missing_roof_layers > 0.
-     */
-    uint32_t    roof_recovery_dtt = 0;
-
-    void set_pending_roof_recovery(uint32_t pending_layers, uint32_t recovery_depth)
-    {
-        this->missing_roof_layers = pending_layers;
-        this->roof_recovery_dtt = pending_layers > 0 ? recovery_depth : 0;
-    }
+    uint32_t    missing_roof_layers;
 
     // called by increase_single_area() and increaseAreas()
     [[nodiscard]] static SupportElementState propagate_down(const SupportElementState &src)
@@ -220,10 +209,6 @@ struct SupportElementState : public SupportElementStateBits
         SupportElementState dst{ src };
         ++ dst.distance_to_top;
         -- dst.layer_idx;
-        if (dst.has_pending_roof_recovery()) {
-            -- dst.missing_roof_layers;
-            ++ dst.roof_recovery_dtt;
-        }
         // set to invalid as we are a new node on a new layer
         dst.result_on_layer_reset();
         dst.skip_ovalisation = false;
@@ -231,7 +216,6 @@ struct SupportElementState : public SupportElementStateBits
     }
 
     [[nodiscard]] bool locked() const { return this->distance_to_top < this->dont_move_until; }
-    [[nodiscard]] bool has_pending_roof_recovery() const { return this->missing_roof_layers > 0; }
 };
 
 /*!

@@ -14,10 +14,6 @@ class PartPlate;
 class Plater;
 
 
-bool play_dual_extruder_slice_video();
-bool play_dual_extruder_print_tpu_video();
-bool open_filament_group_wiki();
-
 class FilamentGroupPopup : public PopupWindow
 {
 public:
@@ -73,7 +69,6 @@ private:
 
 
     wxStaticText *wiki_link;
-    wxStaticText *video_link;
 
     PartPlate* partplate_ref{ nullptr };
     Plater* plater_ref{ nullptr };

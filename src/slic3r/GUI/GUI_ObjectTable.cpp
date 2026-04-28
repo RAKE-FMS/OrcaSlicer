@@ -1520,7 +1520,12 @@ void ObjectGridTable::update_value_to_object(Model* model, ObjectGridRow* grid_r
             object->printable = grid_row->printable.value;
             object->instances[0]->printable = object->printable;
 
-            wxGetApp().obj_list()->printable_state_changed({object});
+            std::vector<ObjectVolumeID> object_volume_ids;
+            ObjectVolumeID object_volume_id;
+            object_volume_id.object = object;
+            object_volume_id.volume = nullptr;
+            object_volume_ids.push_back(object_volume_id);
+            wxGetApp().obj_list()->printable_state_changed(object_volume_ids);
             BOOST_LOG_TRIVIAL(info) << __FUNCTION__ << boost::format(", change object %1%'s printable to %2%")%object->module_name %object->printable;
         }
     }
@@ -3277,7 +3282,7 @@ void ObjectTablePanel::msw_rescale() {
 // ObjectTableDialog
 // ----------------------------------------------------------------------------
 ObjectTableDialog::ObjectTableDialog(wxWindow* parent, Plater* platerObj, Model *modelObj, wxSize maxSize)
-    : GUI::DPIDialog(parent, wxID_ANY, _L("Object/Part Settings"), wxDefaultPosition, wxDefaultSize, wxCAPTION | wxCLOSE_BOX | wxRESIZE_BORDER)
+    : GUI::DPIDialog(parent, wxID_ANY, _L("Object/Part Setting"), wxDefaultPosition, wxDefaultSize, wxCAPTION | wxCLOSE_BOX | wxRESIZE_BORDER)
     ,
     m_model(modelObj), m_plater(platerObj)
 {
@@ -3410,9 +3415,7 @@ void ObjectTableDialog::OnClose(wxCloseEvent &evt)
 
 void ObjectTableDialog::OnText(wxKeyEvent &evt)
 {
-	if (evt.GetKeyCode() == WXK_ESCAPE) {
-		Close();
-	} else {
+	if (evt.GetKeyCode() != WXK_ESCAPE) {
 		evt.Skip();
 	}
 }

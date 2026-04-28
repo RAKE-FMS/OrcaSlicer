@@ -2,7 +2,7 @@
 #include "GLGizmoAdvancedCut.hpp"
 #include "slic3r/GUI/GLCanvas3D.hpp"
 
-#include <glad/gl.h>
+#include <GL/glew.h>
 
 #include <wx/button.h>
 #include <wx/checkbox.h>
@@ -659,7 +659,8 @@ void GLGizmoAdvancedCut::perform_cut(const Selection& selection)
                                              cut_with_groove ? cut.perform_with_groove(m_groove, m_rotate_matrix) :
                                                                cut.perform_with_plane();
         // fix_non_manifold_edges
-        {
+#ifdef HAS_WIN10SDK
+        if (is_windows10()) {
             bool is_showed_dialog = false;
             bool user_fix_model   = false;
             for (size_t i = 0; i < new_objects.size(); i++) {
@@ -686,7 +687,7 @@ void GLGizmoAdvancedCut::perform_cut(const Selection& selection)
                             wxString msg = _L("Repairing model object");
                             msg += ": " + from_u8(model_name) + "\n";
                             std::string res;
-                            if (!fix_model_with_cgal_gui(*model_object, vol_idx, progress_dlg, msg, res)) return false;
+                            if (!fix_model_by_win10_sdk_gui(*model_object, vol_idx, progress_dlg, msg, res)) return false;
                             return true;
                         };
                         ProgressDialog progress_dlg(_L("Repairing model object"), "", 100, find_toplevel_parent(plater), wxPD_AUTO_HIDE | wxPD_APP_MODAL | wxPD_CAN_ABORT, true);
@@ -699,6 +700,7 @@ void GLGizmoAdvancedCut::perform_cut(const Selection& selection)
                 }
             }
         }
+ #endif
         // set offset for new_objects
 
         // save cut_id to post update synchronization

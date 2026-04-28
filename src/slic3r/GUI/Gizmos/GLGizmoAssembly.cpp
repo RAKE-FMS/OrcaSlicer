@@ -4,7 +4,6 @@
 #include "slic3r/GUI/Plater.hpp"
 #include "slic3r/GUI/Gizmos/GizmoObjectManipulation.hpp"
 #include "slic3r/Utils/UndoRedo.hpp"
-#include "GLGizmoUtils.hpp"
 
 #include "libslic3r/PresetBundle.hpp"
 #include "libslic3r/MeasureUtils.hpp"
@@ -13,7 +12,7 @@
 
 #include <numeric>
 
-#include <glad/gl.h>
+#include <GL/glew.h>
 
 #include <tbb/parallel_for.h>
 #include <future>
@@ -44,8 +43,6 @@ std::string GLGizmoAssembly::on_get_name() const
 
 bool GLGizmoAssembly::on_init()
 {
-    GLGizmoMeasure::on_init();
-
     m_shortcut_key = WXK_CONTROL_Y;
     return true;
 }
@@ -111,8 +108,14 @@ void GLGizmoAssembly::on_render_input_window(float x, float y, float bottom_limi
     ImGui::Separator();
 
     ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(6.0f, 10.0f));
-    
-    GLGizmoUtils::render_tooltip_button(m_imgui, m_parent, m_shortcuts, x, y);
+    float get_cur_y = ImGui::GetContentRegionMax().y + ImGui::GetFrameHeight() + y;
+    float caption_max    = 0.f;
+    float total_text_max = 0.f;
+    for (const auto &t : std::array<std::string, 3>{"point_selection", "reset", "unselect"}) {
+        caption_max    = std::max(caption_max, m_imgui->calc_text_size(m_desc[t + "_caption"]).x);
+        total_text_max = std::max(total_text_max, m_imgui->calc_text_size(m_desc[t]).x);
+    }
+    show_tooltip_information(caption_max, x, get_cur_y);
 
     float f_scale =m_parent.get_gizmos_manager().get_layout_scale();
     ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(6.0f, 4.0f * f_scale));

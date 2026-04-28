@@ -18,11 +18,6 @@ public:
 
     wxSize DoGetBestSize() const override;
 
-protected:
-#ifdef __WXMSW__
-    WXLRESULT MSWWindowProc(WXUINT nMsg, WXWPARAM wParam, WXLPARAM lParam) override;
-#endif
-
 private:
     wxString m_title;
 };
@@ -75,7 +70,7 @@ public:
     void ShowCalibrationButton(bool show = true);
 
 protected:
-#ifdef __WXMSW__
+#ifdef __WIN32__
     WXLRESULT MSWWindowProc(WXUINT nMsg, WXWPARAM wParam, WXLPARAM lParam) override;
 #endif
 
@@ -85,7 +80,6 @@ private:
     wxAuiToolBarItem* m_dropdown_menu_item;
     wxRect m_normalRect;
     wxPoint m_delta;
-    wxPoint m_last_mouse_position{wxDefaultPosition};
     wxMenu m_top_menu;
     wxMenu* m_file_menu;
     wxMenu m_calib_menu;

@@ -33,11 +33,7 @@ const std::string& FanMover::process_gcode(const std::string& gcode, bool flush)
 
     if (flush) {
         while (!m_buffer.empty()) {
-            BufferData &front = m_buffer.front();
-            m_process_output += front.raw + "\n";
-            // Orca: Keep the emitted fan state in sync when flushing buffered fan commands.
-            if (front.fan_speed >= 0)
-                m_front_buffer_fan_speed = front.fan_speed;
+            m_process_output += m_buffer.front().raw + "\n";
             remove_from_buffer(m_buffer.begin());
         }
     }

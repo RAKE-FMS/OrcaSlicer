@@ -9,7 +9,7 @@
 #include "slic3r/GUI/ImGuiWrapper.hpp"
 #include "slic3r/GUI/Plater.hpp"
 
-#include <glad/gl.h>
+#include <GL/glew.h>
 
 #ifdef __WINDOWS__
 #include <windows.h>

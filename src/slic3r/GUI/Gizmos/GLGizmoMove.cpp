@@ -6,7 +6,7 @@
 #include "libslic3r/AppConfig.hpp"
 
 
-#include <glad/gl.h>
+#include <GL/glew.h>
 
 #include <wx/utils.h>
 

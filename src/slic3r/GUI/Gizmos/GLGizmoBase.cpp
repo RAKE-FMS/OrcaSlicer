@@ -1,7 +1,7 @@
 #include "GLGizmoBase.hpp"
 #include "slic3r/GUI/GLCanvas3D.hpp"
 
-#include <glad/gl.h>
+#include <GL/glew.h>
 
 #include "slic3r/GUI/GUI_App.hpp"
 #include "slic3r/GUI/Plater.hpp"

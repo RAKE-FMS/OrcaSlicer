@@ -9,7 +9,7 @@
 #include <string_view>
 using namespace std::literals;
 
-#include <glad/gl.h>
+#include <GL/glew.h>
 
 namespace Slic3r {
 

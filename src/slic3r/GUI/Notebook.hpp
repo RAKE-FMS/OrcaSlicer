@@ -6,6 +6,7 @@
 #include <wx/bookctrl.h>
 #include <wx/sizer.h>
 
+class ModeSizer;
 class ScalableButton;
 class Button;
 
@@ -39,6 +40,7 @@ private:
     int                             m_selection {-1};
     int                             m_btn_margin;
     int                             m_line_margin;
+    //ModeSizer*                      m_mode_sizer {nullptr};
     std::vector<wxString>           m_pageLabels; // ORCA
 };
 

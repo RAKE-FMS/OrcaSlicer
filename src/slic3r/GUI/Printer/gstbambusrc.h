@@ -65,10 +65,6 @@ struct _GstBambuSrc
   Bambu_Tunnel tnl;
   GstClockTime sttime;
   int video_type;
-  int frame_rate;
-  guint64 frame_count;
-  GstClockTime last_arrival;
-  GstClockTime avg_period;
 };
 
 extern void gstbambusrc_register();

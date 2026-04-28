@@ -19,7 +19,7 @@
 #include "libslic3r/Model.hpp"
 
 #include <imgui/imgui.h>
-#include <glad/gl.h>
+#include <GL/glew.h>
 
 namespace Slic3r{
 class ModelVolume;

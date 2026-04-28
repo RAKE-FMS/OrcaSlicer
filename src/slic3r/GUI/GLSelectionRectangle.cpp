@@ -7,7 +7,7 @@
 #include "Plater.hpp"
 #include <igl/project.h>
 
-#include <glad/gl.h>
+#include <GL/glew.h>
 
 namespace Slic3r {
 namespace GUI {

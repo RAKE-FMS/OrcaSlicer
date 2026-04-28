@@ -11,7 +11,7 @@
 #include "GUI_App.hpp"
 #include "GLModel.hpp"
 
-#include <glad/gl.h>
+#include <GL/glew.h>
 
 #include <wx/image.h>
 #include <boost/filesystem.hpp>

@@ -9,7 +9,7 @@
 
 #include "libslic3r/PresetBundle.hpp"
 
-#include <glad/gl.h>
+#include <GL/glew.h>
 
 namespace Slic3r {
 namespace GUI {

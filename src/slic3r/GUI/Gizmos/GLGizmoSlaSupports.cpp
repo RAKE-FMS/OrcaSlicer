@@ -6,7 +6,7 @@
 #include "slic3r/GUI/MainFrame.hpp"
 #include "slic3r/Utils/UndoRedo.hpp"
 
-#include <glad/gl.h>
+#include <GL/glew.h>
 
 #include <wx/msgdlg.h>
 #include <wx/settings.h>

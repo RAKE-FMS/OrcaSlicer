@@ -11,7 +11,7 @@
 #include "libslic3r/Model.hpp"
 #include "libslic3r/QuadricEdgeCollapse.hpp"
 
-#include <glad/gl.h>
+#include <GL/glew.h>
 
 #include <thread>
 

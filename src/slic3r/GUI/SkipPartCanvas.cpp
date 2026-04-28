@@ -1,4 +1,4 @@
-#include <glad/gl.h>
+#include <GL/glew.h>
 #include "SkipPartCanvas.hpp"
 
 #include <opencv2/opencv.hpp>

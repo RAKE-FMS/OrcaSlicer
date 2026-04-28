@@ -4,8 +4,7 @@
 
 #include "GUI.hpp"
 #include "DragDropPanel.hpp"
-#include "wxExtensions.hpp"
-#include "Widgets/Label.hpp"
+#include "Widgets/SwitchButton.hpp"
 
 namespace Slic3r { namespace GUI {
 

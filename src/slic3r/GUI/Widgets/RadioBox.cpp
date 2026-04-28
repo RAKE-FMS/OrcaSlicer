@@ -13,16 +13,9 @@ RadioBox::RadioBox(wxWindow *parent)
     // SetBackgroundStyle(wxBG_STYLE_TRANSPARENT);
     if (parent) SetBackgroundColour(parent->GetBackgroundColour());
     // Bind(wxEVT_TOGGLEBUTTON, [this](auto& e) { update(); e.Skip(); });
-    update();
-#ifdef __WXGTK__
-    wxSize bestSize = GetBestSize();
-    bestSize.IncTo(m_on.GetBmpSize());
-    SetSize(bestSize);
-    SetMinSize(bestSize);
-#else
     SetSize(m_on.GetBmpSize());
     SetMinSize(m_on.GetBmpSize());
-#endif
+    update();
 }
 
 void RadioBox::SetValue(bool value)
@@ -41,16 +34,8 @@ void RadioBox::Rescale()
 {
     m_on.msw_rescale();
     m_off.msw_rescale();
-    update();
-#ifdef __WXGTK__
-    wxSize bestSize = GetBestSize();
-    bestSize.IncTo(m_on.GetBmpSize());
-    SetSize(bestSize);
-    SetMinSize(bestSize);
-#else
     SetSize(m_on.GetBmpSize());
-    SetMinSize(m_on.GetBmpSize());
-#endif
+    update();
 }
 
 void RadioBox::update() {

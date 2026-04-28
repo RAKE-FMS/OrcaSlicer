@@ -9,7 +9,7 @@
 
 #include <numeric>
 
-#include <glad/gl.h>
+#include <GL/glew.h>
 
 namespace Slic3r {
 namespace GUI {

@@ -36,7 +36,7 @@ public:
 
     int GetLastError() const { return m_error; }
 
-    static inline const wxMediaState MEDIASTATE_BUFFERING = static_cast<wxMediaState>(6);
+    static constexpr wxMediaState MEDIASTATE_BUFFERING = (wxMediaState) 6;
 
 protected:
     void DoSetSize(int x, int y, int width, int height, int sizeFlags) override;

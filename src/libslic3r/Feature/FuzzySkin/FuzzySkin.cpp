@@ -196,7 +196,7 @@ void group_region_by_fuzzify(PerimeterGenerator& g)
             surfaces.push_back(&surface);
         }
 
-        if (cfg.type != FuzzySkinType::None && cfg.type != FuzzySkinType::Disabled_fuzzy) {
+        if (cfg.type != FuzzySkinType::None) {
             g.has_fuzzy_skin = true;
             if (cfg.type != FuzzySkinType::External) {
                 g.has_fuzzy_hole = true;
@@ -285,7 +285,7 @@ Polygon apply_fuzzy_skin(const Polygon& polygon, const PerimeterGenerator& perim
     // Split the loops into lines with different config, and fuzzy them separately
     fuzzified = polygon;
     for (const auto& r : fuzzified_regions) {
-        auto splitted = Algorithm::split_line(fuzzified, r.second, true);
+        const auto splitted = Algorithm::split_line(fuzzified, r.second, true);
         if (splitted.empty()) {
             // No intersection, skip
             continue;
@@ -296,24 +296,26 @@ Polygon apply_fuzzy_skin(const Polygon& polygon, const PerimeterGenerator& perim
             // The entire polygon is fuzzified
             fuzzy_polyline(fuzzified.points, true, slice_z, r.first);
         } else {
-            // Start from a non-clipped junction so wrapped clipped segments do
-            // not need an artificial reconnection across the seam.
-            const auto first_non_clipped = std::find_if(splitted.begin(), splitted.end(), [](const Algorithm::SplitLineJunction& j) {
-                return !j.clipped;
-            });
-            if (first_non_clipped != splitted.begin()) {
-                std::rotate(splitted.begin(), first_non_clipped, splitted.end());
-            }
             Points segment;
             segment.reserve(splitted.size());
             fuzzified.points.clear();
 
             const auto fuzzy_current_segment = [&segment, &fuzzified, &r, slice_z]() {
-                fuzzified.points.push_back(segment.front());
-                const auto back = segment.back();
+                // Orca: non fuzzy points to isolate fuzzy region
+                const auto front = segment.front();
+                const auto back  = segment.back();
+ 
                 fuzzy_polyline(segment, false, slice_z, r.first);
+                //Orca: only add non fuzzy point if it's not in the polygon closing point.
+                if (!fuzzified.points.empty()
+                    && fuzzified.points.back() != front) {
+                    fuzzified.points.push_back(front);
+                }
                 fuzzified.points.insert(fuzzified.points.end(), segment.begin(), segment.end());
-                fuzzified.points.push_back(back);
+                //Orca: only add non fuzzy point if it's not in the polygon closing point.
+                if (!fuzzified.points.empty() && fuzzified.points.back() != front) {
+                    fuzzified.points.push_back(back);
+                }
                 segment.clear();
             };
 
@@ -336,7 +338,12 @@ Polygon apply_fuzzy_skin(const Polygon& polygon, const PerimeterGenerator& perim
             }
         }
     }
-
+ 
+    // Orca: ensure the loop is closed after fuzzification 
+    if (!fuzzified.points.empty() && fuzzified.points.front() != fuzzified.points.back()) {
+        fuzzified.points.back() = fuzzified.points.front();
+    }
+ 
     return fuzzified;
 }
 

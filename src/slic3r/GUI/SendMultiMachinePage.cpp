@@ -449,10 +449,12 @@ PrintParams SendMultiMachinePage::request_params(MachineObject* obj)
     bool timelapse = app_config->get("print", "timelapse") == "1" ? true : false;
     auto use_ams = false;
 
+    AmsRadioSelectorList::Node* node = m_radio_group.GetFirst();
     auto                     groupid = 0;
 
-    for (auto it = m_radio_group.begin(); it != m_radio_group.end(); ++it) {
-        AmsRadioSelector* rs = *it;
+
+    while (node) {
+        AmsRadioSelector* rs = node->GetData();
         if (rs->m_param_name == "use_ams" && rs->m_radiobox->GetValue()) {
             use_ams = true;
         }
@@ -460,6 +462,8 @@ PrintParams SendMultiMachinePage::request_params(MachineObject* obj)
         if (rs->m_param_name == "use_extra" && rs->m_radiobox->GetValue()) {
             use_ams = false;
         }
+
+        node = node->GetNext();
     }
 
     //use ams
@@ -934,7 +938,7 @@ wxBoxSizer* SendMultiMachinePage::create_item_radiobox(wxString title, wxWindow*
 
 void SendMultiMachinePage::OnSelectRadio(wxMouseEvent& event)
 {
-    AmsRadioSelectorList::compatibility_iterator node = m_radio_group.GetFirst();
+    AmsRadioSelectorList::Node* node = m_radio_group.GetFirst();
     auto                     groupid = 0;
 
     //while (node) {
@@ -971,7 +975,7 @@ void SendMultiMachinePage::OnSelectRadio(wxMouseEvent& event)
 
 void SendMultiMachinePage::on_select_radio(std::string param)
 {
-    AmsRadioSelectorList::compatibility_iterator node = m_radio_group.GetFirst();
+    AmsRadioSelectorList::Node* node = m_radio_group.GetFirst();
     auto                     groupid = 0;
 
     while (node) {
@@ -991,7 +995,7 @@ void SendMultiMachinePage::on_select_radio(std::string param)
 
 bool SendMultiMachinePage::get_value_radio(std::string param)
 {
-    AmsRadioSelectorList::compatibility_iterator node = m_radio_group.GetFirst();
+    AmsRadioSelectorList::Node* node = m_radio_group.GetFirst();
     auto                     groupid = 0;
     while (node) {
         AmsRadioSelector* rs = node->GetData();
